@@ -8,16 +8,28 @@ public enum EnemyType
     WeaknessEnemy
 }
 
-namespace Enemy
+namespace Factory
 {
     public class EnemyFactory : MonoBehaviour
     {
+        public static EnemyFactory Instance;
+
         [SerializeField] private EnemyData[] _enemyDataArray;
 
         [SerializeField] private float _mapMinX = -50f;
         [SerializeField] private float _mapMaxX = 50f;
         [SerializeField] private float _mapMinZ = -50f;
         [SerializeField] private float _mapMaxZ = 50f;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+                Destroy(gameObject);
+        }
 
         public GameObject CreateEnemy(EnemyType enemyType)
         {

@@ -4,6 +4,7 @@ using UnityEngine;
 using HealthSystem;
 using PlayerController;
 using UnityEngine.InputSystem;
+using Factory;
 
 namespace EntityBehaviour
 {
@@ -17,6 +18,9 @@ namespace EntityBehaviour
         private List<Health> ActiveEntity = new List<Health>();
 
         public event Action OnPlayerDie;
+
+        [SerializeField, Range(0f, 1f)] private float _silverCoinDropChance = 0.6f;
+        [SerializeField, Range(0f, 1f)] private float _goldenCoinDropChance = 0.2f;
 
         private void Awake()
         {
@@ -40,7 +44,7 @@ namespace EntityBehaviour
             }
         }
 
-        public void RemoveEntity(Health entity) 
+        public void RemoveEntity(Health entity)
         {
             entity.OnDeath -= EntityDie;
             ActiveEntity.Remove(entity);
@@ -51,19 +55,50 @@ namespace EntityBehaviour
             switch (type)
             {
                 case EntityType.Player:
-                    OnPlayerDie?.Invoke();
-                    _playerMovement.enabled = false;
-                    _playerInput.enabled = false;
-                    Debug.Log("Player die");
+                    PlayerDeath();
                     break;
                 case EntityType.Enemy:
-                    Health entityHealth = entity.GetComponent<Health>();
-                    if (entityHealth != null && ActiveEntity.Contains(entityHealth))
-                    {
-                        RemoveEntity(entityHealth);
-                        Destroy(entity);
-                    }
+                    EnemyDeath(entity);
                     break;
+            }
+        }
+
+        private void EnemyDeath(GameObject entity)
+        {
+            Health entityHealth = entity.GetComponent<Health>();
+            if (entityHealth != null && ActiveEntity.Contains(entityHealth))
+            {
+                DropLoot(entity.transform.position);
+                RemoveEntity(entityHealth);
+                Destroy(entity);
+            }
+        }
+
+        private void PlayerDeath()
+        {
+            OnPlayerDie?.Invoke();
+            _playerMovement.enabled = false;
+            _playerInput.enabled = false;
+            Debug.Log("Player die");
+        }
+
+        private void DropLoot(Vector3 position)
+        {
+            float randomValue = UnityEngine.Random.Range(0f, 1f);
+
+            if (randomValue <= _goldenCoinDropChance)
+            {
+                GoldenCoinFactory.Instance.CreateGoldenCoin(position);
+                Debug.Log("Gold coin dropped!");
+            }
+            else if (randomValue <= _silverCoinDropChance)
+            {
+                SilverCoinFactory.Instance.CreateSilverCoin(position);
+                Debug.Log("Silver coin dropped!");
+            }
+            else
+            {
+                Debug.Log("No coin dropped.");
             }
         }
 

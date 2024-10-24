@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using HealthSystem;
 
-namespace Enemy
+namespace Factory
 {
     public abstract class Zombie : MonoBehaviour, IEnemy
     {

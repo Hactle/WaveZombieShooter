@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Enemy
+namespace Factory
 {
     public class BasicZombie : Zombie
     {

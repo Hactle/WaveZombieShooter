@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Enemy;
+using Factory;
 using HealthSystem;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField] private EnemyFactory _enemyFactory;
     [SerializeField] private WaveData[] _waves;
     [SerializeField] private float _timeBetweenWaves = 30f;
 
@@ -34,7 +33,7 @@ public class WaveManager : MonoBehaviour
         for (int i = 0; i < currentWave.EnemyCount; i++)
         {
             EnemyType enemyType = currentWave.EnemyTypes[Random.Range(0, currentWave.EnemyTypes.Length)];
-            GameObject enemy = _enemyFactory.CreateEnemy(enemyType);
+            GameObject enemy = EnemyFactory.Instance.CreateEnemy(enemyType);
             _activeEnemies.Add(enemy);
 
             Health enemyHealth = enemy.GetComponent<Health>();

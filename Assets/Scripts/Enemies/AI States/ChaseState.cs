@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Enemy
+namespace Factory
 {
     public class ChaseState : IEnemyState
     {

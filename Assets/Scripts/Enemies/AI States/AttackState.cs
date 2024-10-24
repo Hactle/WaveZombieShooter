@@ -1,4 +1,4 @@
-namespace Enemy
+namespace Factory
 {
     public class AttackState : IEnemyState
     {
